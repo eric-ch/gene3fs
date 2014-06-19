@@ -1,8 +1,6 @@
 /*
  * test.c:
  *
- * Copyright (c) 2012 James McKenzie <20@madingley.org>,
- * All rights reserved.
  *
  */
 
