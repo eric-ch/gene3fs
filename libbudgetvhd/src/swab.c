@@ -16,11 +16,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include "project.h"
+#include "internal.h"
 #include <byteswap.h>
 
-INTERNAL int
-bvhd_swab16 (uint16_t * b, size_t n)
+int bvhd_swab16 (uint16_t * b, size_t n)
 {
   while (n--)
     {
@@ -30,8 +29,7 @@ bvhd_swab16 (uint16_t * b, size_t n)
   return 0;
 }
 
-INTERNAL int
-bvhd_swab32 (uint32_t * b, size_t n)
+int bvhd_swab32 (uint32_t * b, size_t n)
 {
   while (n--)
     {
@@ -41,8 +39,7 @@ bvhd_swab32 (uint32_t * b, size_t n)
   return 0;
 }
 
-INTERNAL int
-bvhd_swab64 (uint64_t * b, size_t n)
+int bvhd_swab64 (uint64_t * b, size_t n)
 {
   while (n--)
     {
@@ -53,8 +50,7 @@ bvhd_swab64 (uint64_t * b, size_t n)
 }
 
 
-INTERNAL int
-bvhd_swab_header (bvhd_header * h)
+int bvhd_swab_header (bvhd_header * h)
 {
   //uint8_t cookie[8];
   bvhd_swab64 (&h->data_offset, 1);
@@ -73,15 +69,13 @@ bvhd_swab_header (bvhd_header * h)
   return 0;
 }
 
-INTERNAL int
-bvhd_swab_geometry (bvhd_geometry * g)
+int bvhd_swab_geometry (bvhd_geometry * g)
 {
   bvhd_swab16 (&g->cylinders, 1);
   return 0;
 }
 
-INTERNAL int
-bvhd_swab_footer (bvhd_footer * f)
+int bvhd_swab_footer (bvhd_footer * f)
 {
 
   //uint8_t cookie[8];

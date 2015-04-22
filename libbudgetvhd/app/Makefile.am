@@ -27,7 +27,7 @@
 #
 
 
-INCLUDES = -I$(srcdir)/../src 
+AM_CPPFLAGS = -I$(srcdir)/../src 
 
 bin_PROGRAMS = bvhd_mkvhd bvhd_mkimg bvhd_create
 

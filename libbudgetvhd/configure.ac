@@ -62,10 +62,6 @@ AC_CHECK_PROG(GREP,grep,grep)
 AC_CHECK_PROG(SED,sed,sed)
 AC_PROG_AWK
 
-dnl AC_DEFINE_UNQUOTED(LIBBUDGETVHD_MAJOR_VERSION, $LIBBUDGETVHD_MAJOR_VERSION)
-dnl AC_DEFINE_UNQUOTED(LIBBUDGETVHD_MINOR_VERSION, $LIBBUDGETVHD_MINOR_VERSION)
-dnl AC_DEFINE_UNQUOTED(LIBBUDGETVHD_MICRO_VERSION, $LIBBUDGETVHD_MICRO_VERSION)
-
 AC_CHECK_HEADERS(fcntl.h malloc.h sys/ioctl.h unistd.h)
 AC_CHECK_HEADERS(sys/scsi/impl/uscsi.h scsi/sg.h stdint.h)
 AC_CHECK_HEADERS(sys/int_types.h string.h strings.h)
@@ -74,36 +70,11 @@ AC_CHECK_HEADERS(dirent.h sys/stat.h)
 AC_C_INLINE
 AC_C_CONST
 AC_HEADER_TIME
-AC_STRUCT_TM
 AC_CHECK_FUNCS(select strdup strstr)
-
-I2_TM_H=$ac_cv_struct_tm
-
-I2_HAVE_STDINT_H=0
-I2_HAVE_SYS_INT_TYPES_H=0
-if test "$ac_cv_header_sys_int_types_h" = "yes"; then
-	I2_HAVE_SYS_INT_TYPES_H=1
-fi
-if test "$ac_cv_header_stdint_h" = "yes"; then
-	I2_HAVE_STDINT_H=1
-fi
-I2_HAVE_UNISTD_H=0
-if test "$ac_cv_header_unistd_h" = "yes"; then
-	I2_HAVE_UNISTD_H=1
-fi
-
-AC_SUBST(I2_TM_H)
-AC_SUBST(I2_HAVE_STDINT_H)
-AC_SUBST(I2_HAVE_SYS_INT_TYPES_H)
-AC_SUBST(I2_HAVE_UNISTD_H)
-
-
 
 AC_OUTPUT([Makefile 
 	src/Makefile 
-	src/budgetvhd-head.h
 	test/Makefile 
 	app/Makefile
 	libbudgetvhd.pc.src
 	libbudgetvhd-config.src],[chmod +x libbudgetvhd-config.src])
-

@@ -37,92 +37,41 @@
 
 #include "config.h"
 
-#ifdef TM_IN_SYS_TIME
-#include <sys/time.h>
-#ifdef TIME_WITH_SYS_TIME
 #include <time.h>
-#endif
-#else
-#ifdef TIME_WITH_SYS_TIME
-#include <sys/time.h>
-#endif
-#include <time.h>
-#endif
-
 #include <stdio.h>
 #include <stdlib.h>
-
-#ifdef HAVE_MALLOC_H
 #include <malloc.h>
-#endif
-
-#ifdef HAVE_STRING_H
 #include <string.h>
-#endif
-
-#ifdef HAVE_STRINGS_H
 #include <strings.h>
-#endif
-
-#ifdef HAVE_UNISTD_H
 #include <unistd.h>
-#endif
-
-#if defined(HAVE_STDINT_H)
 #include <stdint.h>
-#elif defined(HAVE_SYS_INT_TYPES_H)
-#include <sys/int_types.h>
-#endif
-
-#ifdef INT_PROTOS
-#define INTERNAL
-#define EXTERNAL
-#else 
-#ifdef EXT_PROTOS
-#define INTERNAL static
-#define EXTERNAL
-#else
-#define INTERNAL
-#define EXTERNAL
-#endif
-#endif
-
 #include <fcntl.h>
 
 #include "budgetvhd.h"
 
-#include "prototypes.h"
+#define EXPORT_SYMBOL __attribute__ ((visibility ("default")))
 
-struct BVHD_struct
-{
-  FILE *f;
-
-
-  uint32_t *bat;
-  uint32_t bat_ents;
-  uint64_t bat_offset;
-
-
-  uint64_t size;
-
-  uint32_t block_size;
-  uint32_t block_shift;
-  uint64_t block_mask;
-
-  uint32_t block_sector_size;
-  uint32_t block_sector_shift;
-  uint64_t block_sector_mask;
-
-  uint8_t *bitmap;
-  uint64_t bitmap_size;
-
-  uint64_t current_tail;
-
-  bvhd_footer footer;
-  bvhd_header header;
-
-  int ro;
-};
-
+/* These symbols are only used internally */
+uint32_t bvhd_checksum(void *_buf, int len);
+uint32_t bvhd_now(void);
+bvhd_uuid bvhd_new_uid(void);
+uint64_t bvhd_round_to_block(BVHD *v, uint64_t ret);
+uint64_t bvhd_round_to_sector(BVHD *v, uint64_t ret);
+bvhd_geometry bvhd_make_geometry(uint64_t sectors);
+int bvhd_check_footer(bvhd_footer *footer);
+int bvhd_check_header(bvhd_header *header);
+void bvhd_create_footer(BVHD *v, bvhd_footer *footer);
+void bvhd_create_header(BVHD *v, bvhd_header *header);
+uint32_t bvhd_new_block(BVHD *v);
+int bvhd_update_bat(BVHD *v, uint32_t block, uint32_t offset);
+/* version.c */
+char *libbudgetvhd_get_version(void);
+/* swab.c */
+int bvhd_swab16(uint16_t *b, size_t n);
+int bvhd_swab32(uint32_t *b, size_t n);
+int bvhd_swab64(uint64_t *b, size_t n);
+int bvhd_swab_header(bvhd_header *h);
+int bvhd_swab_geometry(bvhd_geometry *g);
+int bvhd_swab_footer(bvhd_footer *f);
 
 #endif /* __PROJECT_H__ */

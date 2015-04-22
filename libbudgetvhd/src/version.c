@@ -22,19 +22,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-
-static char rcsid[] = "$Id:$";
-
-/*
- * $Log:$
- *
- */
-
-#include "project.h"
+#include "internal.h"
 #include "version.h"
 
-INTERNAL char *
-libbudgetvhd_get_version (void)
+char * libbudgetvhd_get_version (void)
 {
   return FULL_VERSION;
 }
