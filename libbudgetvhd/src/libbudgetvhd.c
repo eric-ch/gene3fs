@@ -23,19 +23,9 @@
  */
 
 
-static char rcsid[] = "$Id:$";
+#include "internal.h"
 
-/*
- * $Log:$
- *
- */
-
-#include "project.h"
-
-
-
-INTERNAL uint32_t
-bvhd_checksum (void *_buf, int len)
+uint32_t bvhd_checksum (void *_buf, int len)
 {
   uint8_t *buf = (uint8_t *) _buf;
   uint32_t ret = 0;
@@ -47,16 +37,14 @@ bvhd_checksum (void *_buf, int len)
   return ~ret;
 }
 
-INTERNAL uint32_t
-bvhd_now (void)
+uint32_t bvhd_now (void)
 {
   time_t t = time (NULL);
 
   return t - 946684800;
 }
 
-INTERNAL bvhd_uuid
-bvhd_new_uid (void)
+bvhd_uuid bvhd_new_uid (void)
 {
   bvhd_uuid ret;
   int fd;
@@ -70,8 +58,7 @@ bvhd_new_uid (void)
 }
 
 
-INTERNAL uint64_t
-bvhd_round_to_block (BVHD * v, uint64_t ret)
+uint64_t bvhd_round_to_block (BVHD * v, uint64_t ret)
 {
   ret += v->block_mask;
   ret &= ~v->block_mask;
@@ -79,8 +66,7 @@ bvhd_round_to_block (BVHD * v, uint64_t ret)
 }
 
 
-INTERNAL uint64_t
-bvhd_round_to_sector (BVHD * v, uint64_t ret)
+uint64_t bvhd_round_to_sector (BVHD * v, uint64_t ret)
 {
   ret += 511;
   ret &= ~(uint64_t) 511;
@@ -89,8 +75,7 @@ bvhd_round_to_sector (BVHD * v, uint64_t ret)
 
 /* Implement the CHS calculation in the appendix of the Microsoft standard*/
 
-INTERNAL bvhd_geometry
-bvhd_make_geometry (uint64_t sectors)
+bvhd_geometry bvhd_make_geometry (uint64_t sectors)
 {
   bvhd_geometry ret;
   uint32_t hc, heads;
@@ -137,8 +122,7 @@ bvhd_make_geometry (uint64_t sectors)
 }
 
 
-INTERNAL int
-bvhd_check_footer (bvhd_footer * footer)
+int bvhd_check_footer (bvhd_footer * footer)
 {
   uint32_t c, d;
 
@@ -161,8 +145,7 @@ bvhd_check_footer (bvhd_footer * footer)
   return 0;
 }
 
-INTERNAL int
-bvhd_check_header (bvhd_header * header)
+int bvhd_check_header (bvhd_header * header)
 {
   uint32_t c, d;
 
@@ -188,8 +171,7 @@ bvhd_check_header (bvhd_header * header)
 }
 
 
-EXTERNAL void
-bvhd_close (BVHD * v)
+EXPORT_SYMBOL void bvhd_close (BVHD * v)
 {
 
   if (v->f)
@@ -203,8 +185,7 @@ bvhd_close (BVHD * v)
   free (v);
 }
 
-EXTERNAL BVHD *
-bvhd_open (char *name, int ro)
+EXPORT_SYMBOL BVHD *bvhd_open (char *name, int ro)
 {
   uint32_t s;
   bvhd_footer footer2;
@@ -315,8 +296,7 @@ bvhd_open (char *name, int ro)
 
 
 
-INTERNAL void
-bvhd_create_footer (BVHD * v, bvhd_footer * footer)
+void bvhd_create_footer (BVHD * v, bvhd_footer * footer)
 {
   bzero (footer, sizeof (bvhd_footer));
 
@@ -341,8 +321,7 @@ bvhd_create_footer (BVHD * v, bvhd_footer * footer)
 }
 
 
-INTERNAL void
-bvhd_create_header (BVHD * v, bvhd_header * header)
+void bvhd_create_header (BVHD * v, bvhd_header * header)
 {
   bzero (header, sizeof (bvhd_header));
 
@@ -358,8 +337,7 @@ bvhd_create_header (BVHD * v, bvhd_header * header)
 
 
 
-EXTERNAL BVHD *
-bvhd_create (char *name, uint64_t size, uint64_t blocksize)
+EXPORT_SYMBOL BVHD *bvhd_create (char *name, uint64_t size, uint64_t blocksize)
 {
   BVHD *ret;
   int i;
@@ -475,8 +453,7 @@ bvhd_create (char *name, uint64_t size, uint64_t blocksize)
 }
 
 
-INTERNAL uint32_t
-bvhd_new_block (BVHD * v)
+uint32_t bvhd_new_block (BVHD * v)
 {
   uint64_t block_offset = v->current_tail;
 
@@ -503,8 +480,7 @@ bvhd_new_block (BVHD * v)
 }
 
 
-INTERNAL int
-bvhd_update_bat (BVHD * v, uint32_t block, uint32_t offset)
+int bvhd_update_bat (BVHD * v, uint32_t block, uint32_t offset)
 {
   v->bat[block] = offset;
 
@@ -519,8 +495,7 @@ bvhd_update_bat (BVHD * v, uint32_t block, uint32_t offset)
   return 0;
 }
 
-EXTERNAL int
-bvhd_read_sector (BVHD * v, void *buf, uint64_t sector)
+EXPORT_SYMBOL int bvhd_read_sector (BVHD * v, void *buf, uint64_t sector)
 {
   uint32_t block = sector >> v->block_sector_shift;
   //uint64_t os = sector;
@@ -561,8 +536,7 @@ bvhd_read_sector (BVHD * v, void *buf, uint64_t sector)
 
 
 
-EXTERNAL uint32_t
-bvhd_read (BVHD * v, void *_buf, uint64_t sector, uint32_t nsectors)
+EXPORT_SYMBOL uint32_t bvhd_read (BVHD * v, void *_buf, uint64_t sector, uint32_t nsectors)
 {
   uint8_t *buf = (uint8_t *) _buf;
   uint32_t count = 0;
@@ -582,8 +556,7 @@ bvhd_read (BVHD * v, void *_buf, uint64_t sector, uint32_t nsectors)
 }
 
 
-EXTERNAL int
-bvhd_write_sector (BVHD * v, const void *buf, uint64_t sector)
+EXPORT_SYMBOL int bvhd_write_sector (BVHD * v, const void *buf, uint64_t sector)
 {
   uint32_t block = sector >> v->block_sector_shift;
 
@@ -612,8 +585,7 @@ bvhd_write_sector (BVHD * v, const void *buf, uint64_t sector)
   return 0;
 }
 
-EXTERNAL uint32_t
-bvhd_write (BVHD * v, const void *_buf, uint64_t sector, uint32_t nsectors)
+EXPORT_SYMBOL uint32_t bvhd_write (BVHD * v, const void *_buf, uint64_t sector, uint32_t nsectors)
 {
   const uint8_t *buf = (uint8_t *) _buf;
   uint32_t count = 0;
@@ -630,27 +602,23 @@ bvhd_write (BVHD * v, const void *_buf, uint64_t sector, uint32_t nsectors)
   return count;
 }
 
-EXTERNAL uint64_t
-bvhd_size (BVHD * v)
+EXPORT_SYMBOL uint64_t bvhd_size (BVHD * v)
 {
   return v->size;
 }
 
-EXTERNAL void
-bvhd_flush (BVHD * v)
+EXPORT_SYMBOL void bvhd_flush (BVHD * v)
 {
   fflush (v->f);
   fdatasync (fileno (v->f));
 }
 
-EXTERNAL uint64_t
-bvhd_block_size (BVHD * v)
+EXPORT_SYMBOL uint64_t bvhd_block_size (BVHD * v)
 {
   return v->block_size;
 }
 
-EXTERNAL int
-bvhd_bat_filled (BVHD * v, uint64_t sector)
+EXPORT_SYMBOL int bvhd_bat_filled (BVHD * v, uint64_t sector)
 {
   uint32_t block = sector >> v->block_shift;
 

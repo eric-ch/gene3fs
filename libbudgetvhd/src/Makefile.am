@@ -29,14 +29,11 @@
 #
 
 
-INCLUDES = 
-
 SRCS= libbudgetvhd.c version.c swab.c
-CPROTO=cproto
 
 BUDGETVHDSRCS=${SRCS}
 
-noinst_HEADERS= project.h prototypes.h budgetvhd-tail.h ext_prototypes.h
+noinst_HEADERS= internal.h 
 
 libbudgetvhd_la_SOURCES = ${BUDGETVHDSRCS}
 
@@ -46,7 +43,7 @@ lib_LTLIBRARIES=libbudgetvhd.la
 
 include_HEADERS=budgetvhd.h
 
-AM_CFLAGS=-g -Wall
+AM_CFLAGS=-g -Wall -fvisibility=hidden 
 
 libbudgetvhd_la_LDFLAGS = \
         -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) \
@@ -60,18 +57,6 @@ VCHK=${shell cat ${VFS} | @MD5SUM@ | @AWK@ '{print $$1 }' }
 VNUM=${shell @GREP@ ${VCHK} ${VFD}/version-md5sums | @AWK@ '{ print $$2 }'  }
 VDEF=${shell echo `cat ${VFD}/version-major`.`cat ${VFD}/version-minor`.`cat ${VFD}/version-micro` }
 
-
-budgetvhd.h:budgetvhd-head.h ext_prototypes.h budgetvhd-tail.h
-	cat budgetvhd-head.h ext_prototypes.h budgetvhd-tail.h > budgetvhd.h
-
-protos: 
-	echo > prototypes.h
-	echo > ext_prototypes.h
-	cat budgetvhd-head.h ext_prototypes.h budgetvhd-tail.h > budgetvhd.h
-	${CPROTO} -v -DINT_PROTOS ${INCLUDES} ${SRCS} > prototypes.tmp
-	mv -f prototypes.tmp prototypes.h
-	${CPROTO} -v -DEXT_PROTOS ${INCLUDES} ${SRCS} > ext_prototypes.h
-	cat budgetvhd-head.h ext_prototypes.h budgetvhd-tail.h > budgetvhd.h
 
 version.h: $(VFD)/version-files $(VFD)/version-major \
 	$(VFD)/version-minor $(VFD)/version-micro \
