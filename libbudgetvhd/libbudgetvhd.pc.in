@@ -6,7 +6,7 @@ includedir=@includedir@
 Name: libbudgetvhd
 Description: libbudgetvhd
 Requires: 
-Version: %VERSION%
+Version: @VERSION@
 Libs: -L${libdir} -lbudgetvhd
 Cflags: -I${includedir}
 

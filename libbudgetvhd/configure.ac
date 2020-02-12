@@ -1,80 +1,53 @@
-dnl
-dnl
-dnl configure.in:
-dnl
-dnl
-dnl $Id:$
-dnl
-dnl $Log:$
-dnl
-dnl
-dnl
+#
+# Autoconf initialisation.
+#
+AC_INIT(libbudgetvhd, 1.0)
 AC_PREREQ(2.13)
-AC_INIT(src/libbudgetvhd.c)
+AM_CONFIG_HEADER(src/config.h)
+AM_INIT_AUTOMAKE([foreign -Wall -Werror])
+AC_CONFIG_MACRO_DIR([m4])
 
+#
+# Version management.
+# +1    : 0     Interface changes breaking retro-compatibility.
+# 0     : +1    Internal changes without lost of retro-compatibility.
+#
+VERSION_MAJOR=1
+VERSION_MINOR=0
+AC_DEFINE_UNQUOTED([VERSION_MAJOR], [$VERSION_MAJOR], [major version number])
+AC_DEFINE_UNQUOTED([VERSION_MINOR], [$VERSION_MINOR], [minor version number])
+
+#
+# Standard checks.
+#
 AC_PROG_CC
-AC_SYS_LARGEFILE
+AC_PROG_CPP
+AC_PROG_INSTALL
+AC_PROG_LN_S
+AC_PROG_MAKE_SET
+AM_PROG_AR
 
+# Compiler capabilities.
+AC_C_INLINE
+AC_C_CONST
 
-LIBBUDGETVHD_MAJOR_VERSION=`cat $srcdir/version-major`
-LIBBUDGETVHD_MINOR_VERSION=`cat $srcdir/version-minor`
-LIBBUDGETVHD_MICRO_VERSION=`cat $srcdir/version-micro`
+#
+# Libtool
+#
+LT_INIT
 
-
-
-LIBBUDGETVHD_INTERFACE_VERSION_MIN=$LIBBUDGETVHD_MINOR_VERSION
-LIBBUDGETVHD_INTERFACE_VERSION_MAX=$LIBBUDGETVHD_MINOR_VERSION
-LIBBUDGETVHD_INTERFACE_REVISION=1
-
-LIBBUDGETVHD_VERSION=$LIBBUDGETVHD_MAJOR_VERSION.$LIBBUDGETVHD_MINOR_VERSION.$LIBBUDGETVHD_MICRO_VERSION
-
-AC_SUBST(LIBBUDGETVHD_MAJOR_VERSION)
-AC_SUBST(LIBBUDGETVHD_MINOR_VERSION)
-AC_SUBST(LIBBUDGETVHD_MICRO_VERSION)
-AC_SUBST(LIBBUDGETVHD_VERSION)
-
-AC_SUBST(LIBBUDGETVHD_INTERFACE_VERSION_MIN)
-AC_SUBST(LIBBUDGETVHD_INTERFACE_VERSION_MAX)
-AC_SUBST(LIBBUDGETVHD_INTERFACE_REVISION)
-
-
-LT_RELEASE=$LIBBUDGETVHD_MAJOR_VERSION.$LIBBUDGETVHD_MINOR_VERSION
-LT_CURRENT=$LIBBUDGETVHD_INTERFACE_VERSION_MAX
-LT_REVISION=$LIBBUDGETVHD_MICRO_VERSION
-LT_AGE=`expr $LIBBUDGETVHD_INTERFACE_VERSION_MAX - $LIBBUDGETVHD_INTERFACE_VERSION_MIN`
-
-AC_SUBST(LT_RELEASE)
+LT_CURRENT=$VERSION_MAJOR
+LT_REVISION=$VERSION_MINOR
+LT_AGE=0
+LT_RELEASE=$VERSION_MAJOR.$VERSION_MINOR
 AC_SUBST(LT_CURRENT)
 AC_SUBST(LT_REVISION)
 AC_SUBST(LT_AGE)
+AC_SUBST(LT_RELEASE)
 
-VERSION=$LIBBUDGETVHD_VERSION
-PACKAGE=libbudgetvhd
-
-AM_INIT_AUTOMAKE($PACKAGE,$VERSION)
-
-AM_PROG_LIBTOOL
-
-AM_CONFIG_HEADER(src/config.h)
-
-AC_CHECK_PROG(MD5SUM,md5sum,md5sum)
-AC_CHECK_PROG(GREP,grep,grep)
-AC_CHECK_PROG(SED,sed,sed)
-AC_PROG_AWK
-
-AC_CHECK_HEADERS(fcntl.h malloc.h sys/ioctl.h unistd.h)
-AC_CHECK_HEADERS(sys/scsi/impl/uscsi.h scsi/sg.h stdint.h)
-AC_CHECK_HEADERS(sys/int_types.h string.h strings.h)
-AC_CHECK_HEADERS(dirent.h sys/stat.h)
-
-AC_C_INLINE
-AC_C_CONST
-AC_HEADER_TIME
-AC_CHECK_FUNCS(select strdup strstr)
-
-AC_OUTPUT([Makefile 
-	src/Makefile 
-	test/Makefile 
-	app/Makefile
-	libbudgetvhd.pc.src
-	libbudgetvhd-config.src],[chmod +x libbudgetvhd-config.src])
+# Output files.
+AC_OUTPUT([Makefile
+	   libbudgetvhd.pc
+           src/Makefile
+           app/Makefile
+           ])
