@@ -68,6 +68,7 @@ uint64_t bvhd_round_to_block (BVHD * v, uint64_t ret)
 
 uint64_t bvhd_round_to_sector (BVHD * v, uint64_t ret)
 {
+  (void)v;
   ret += 511;
   ret &= ~(uint64_t) 511;
   return ret;
@@ -190,7 +191,7 @@ EXPORT_SYMBOL BVHD *bvhd_open (char *name, int ro)
   uint32_t s;
   bvhd_footer footer2;
   BVHD *ret;
-  int i;
+  unsigned int i;
 
   ret = (BVHD *) malloc (sizeof (BVHD));
   ret->bat = NULL;
@@ -340,7 +341,7 @@ void bvhd_create_header (BVHD * v, bvhd_header * header)
 EXPORT_SYMBOL BVHD *bvhd_create (char *name, uint64_t size, uint64_t blocksize)
 {
   BVHD *ret;
-  int i;
+  unsigned int i;
 
   ret = (BVHD *) malloc (sizeof (BVHD));
   ret->bat = NULL;
