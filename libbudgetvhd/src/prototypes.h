@@ -21,7 +21,7 @@ uint32_t bvhd_checksum(void *_buf, int len);
 uint32_t bvhd_now(void);
 bvhd_uuid bvhd_new_uid(void);
 uint64_t bvhd_round_to_block(BVHD *v, uint64_t ret);
-uint64_t bvhd_round_to_sector(BVHD *v, uint64_t ret);
+uint64_t bvhd_round_to_sector(uint64_t ret);
 bvhd_geometry bvhd_make_geometry(uint64_t sectors);
 int bvhd_check_footer(bvhd_footer *footer);
 int bvhd_check_header(bvhd_header *header);

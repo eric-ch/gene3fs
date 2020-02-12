@@ -66,7 +66,7 @@ uint64_t bvhd_round_to_block (BVHD * v, uint64_t ret)
 }
 
 
-uint64_t bvhd_round_to_sector (BVHD * v, uint64_t ret)
+uint64_t bvhd_round_to_sector (uint64_t ret)
 {
   ret += 511;
   ret &= ~(uint64_t) 511;
@@ -190,7 +190,7 @@ EXPORT_SYMBOL BVHD *bvhd_open (char *name, int ro)
   uint32_t s;
   bvhd_footer footer2;
   BVHD *ret;
-  int i;
+  unsigned int i;
 
   ret = (BVHD *) malloc (sizeof (BVHD));
   ret->bat = NULL;
@@ -248,7 +248,7 @@ EXPORT_SYMBOL BVHD *bvhd_open (char *name, int ro)
   ret->block_sector_mask = ret->block_sector_size - 1;
 
   ret->bitmap_size = ((ret->block_size / 512) + 7) / 8;
-  ret->bitmap_size = bvhd_round_to_sector (ret, ret->bitmap_size);
+  ret->bitmap_size = bvhd_round_to_sector (ret->bitmap_size);
   ret->bitmap = malloc (ret->bitmap_size);
 
   for (i = 0; i < ret->bitmap_size; ++i)
@@ -289,7 +289,7 @@ EXPORT_SYMBOL BVHD *bvhd_open (char *name, int ro)
       ret->current_tail -= sizeof (bvhd_footer);
     }
 
-  ret->current_tail = bvhd_round_to_sector (ret, ret->current_tail);
+  ret->current_tail = bvhd_round_to_sector (ret->current_tail);
 
   return ret;
 }
@@ -340,7 +340,7 @@ void bvhd_create_header (BVHD * v, bvhd_header * header)
 EXPORT_SYMBOL BVHD *bvhd_create (char *name, uint64_t size, uint64_t blocksize)
 {
   BVHD *ret;
-  int i;
+  unsigned int i;
 
   ret = (BVHD *) malloc (sizeof (BVHD));
   ret->bat = NULL;
@@ -370,7 +370,7 @@ EXPORT_SYMBOL BVHD *bvhd_create (char *name, uint64_t size, uint64_t blocksize)
       ret->block_sector_mask = ret->block_sector_size - 1;
 
       ret->bitmap_size = ((ret->block_size / 512) + 7) / 8;
-      ret->bitmap_size = bvhd_round_to_sector (ret, ret->bitmap_size);
+      ret->bitmap_size = bvhd_round_to_sector (ret->bitmap_size);
       ret->bitmap = malloc (ret->bitmap_size);
 
       if (!ret->bitmap)
@@ -432,7 +432,7 @@ EXPORT_SYMBOL BVHD *bvhd_create (char *name, uint64_t size, uint64_t blocksize)
       ret->current_tail =
         ret->bat_offset + (sizeof (uint32_t) * ret->bat_ents);
 
-      ret->current_tail = bvhd_round_to_sector (ret, ret->current_tail);
+      ret->current_tail = bvhd_round_to_sector (ret->current_tail);
 
 
       bvhd_swab_footer (&ret->footer);
